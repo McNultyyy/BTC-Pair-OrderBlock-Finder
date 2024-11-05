@@ -1,0 +1,29 @@
+name: Check Order Block Prices
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"  # Runs every 15 minutes
+
+jobs:
+  price-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pandas python-telegram-bot
+
+      - name: Check Order Block Prices
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python scripts/check_order_block_price.py
