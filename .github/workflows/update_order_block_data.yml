@@ -5,6 +5,9 @@ on:
     - cron: "30 * * * *"  # Runs every hour, 30 minutes after raw data update
   workflow_dispatch:        # Allows manual trigger
 
+permissions:
+  contents: write
+
 jobs:
   update-order-block-data:
     runs-on: ubuntu-latest
