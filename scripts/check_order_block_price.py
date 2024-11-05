@@ -3,7 +3,7 @@ import glob
 import requests
 import pandas as pd
 
-API_BASE_URL = "https://api.binance.com"
+API_BASE_URL = "https://api.binance.us"
 ORDER_BLOCK_DIR = "data/orderblocks"
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")

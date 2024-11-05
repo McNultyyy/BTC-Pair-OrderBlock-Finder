@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 from datetime import datetime, timedelta
 
-API_BASE_URL = "https://api.binance.com"
+API_BASE_URL = "https://api.binance.us"
 DATA_DIR = "data"
 RAW_DATA_DIR = f"{DATA_DIR}/raw"
 
