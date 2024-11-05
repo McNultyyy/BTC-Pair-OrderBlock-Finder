@@ -1,7 +1,7 @@
 import os
 import requests
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 API_BASE_URL = "https://api.binance.us"
 DATA_DIR = "data"
@@ -23,8 +23,9 @@ def fetch_all_pairs():
     ]
 
 def fetch_and_save_raw_data(pair):
+    """Fetches 4-hour historical data for a given pair and saves to a CSV file."""
     endpoint = f"{API_BASE_URL}/api/v3/klines"
-    start_date = datetime.utcnow() - timedelta(days=730)
+    start_date = datetime.now(timezone.utc) - timedelta(days=730)  # Use timezone-aware datetime
     params = {
         "symbol": pair,
         "interval": "4h",
@@ -41,12 +42,14 @@ def fetch_and_save_raw_data(pair):
         if not batch_data:
             break
         all_data.extend(batch_data)
-        params["startTime"] = batch_data[-1][0] + 1
+        params["startTime"] = batch_data[-1][0] + 1  # Continue from the last timestamp
 
     df = pd.DataFrame(all_data, columns=["ts", "open", "high", "low", "close", "volume", "close_time",
                                          "quote_asset_volume", "num_trades", "taker_buy_base", "taker_buy_quote", "ignore"])
     df["ts"] = pd.to_datetime(df["ts"], unit='ms')
-    df = df[["ts", "open", "high", "low", "close"]].astype(float)
+    
+    # Only convert numeric columns to float
+    df[["open", "high", "low", "close"]] = df[["open", "high", "low", "close"]].astype(float)
 
     output_file = f"{RAW_DATA_DIR}/{pair}_4h.csv"
     df.to_csv(output_file, index=False)
