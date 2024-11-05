@@ -3,6 +3,7 @@ name: Update Order Block Data
 on:
   schedule:
     - cron: "30 * * * *"  # Runs every hour, 30 minutes after raw data update
+  workflow_dispatch:        # Allows manual trigger
 
 jobs:
   update-order-block-data:
