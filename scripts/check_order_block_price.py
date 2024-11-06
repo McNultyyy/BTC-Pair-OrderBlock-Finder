@@ -9,6 +9,13 @@ ORDER_BLOCK_DIR = "data/orderblocks"
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
+def send_alert(message):
+    send_std_alert(message)
+    send_telegram_alert(message)
+
+def send_std_alert(message):
+    print(message)
+
 def send_telegram_alert(message):
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     data = {"chat_id": TELEGRAM_CHAT_ID, "text": message}
@@ -40,7 +47,7 @@ def check_order_block_prices():
                 if (order_block_type == "bullish" and current_price >= order_block_price) or \
                    (order_block_type == "bearish" and current_price <= order_block_price):
                     message = f"{asset} has reached {order_block_type} order block price at {order_block_price}. Current price: {current_price}"
-                    send_telegram_alert(message)
+                    send_alert(message)
                     triggered_alerts.append(message)
         except Exception as e:
             print(f"Failed to check price for {asset}: {e}")
